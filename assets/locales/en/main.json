@@ -369,6 +369,19 @@
     "special-thanks": "Special thanks to",
     "translators": "Translators"
   },
+  "sentiment": {
+    "prompt": {
+      "joyful": "How <em>joyful</em> is this street?"
+    },
+    "answer": {
+      "rating-1": "Absolutely not",
+      "rating-2": "Not very much",
+      "rating-3": "It’s so-so",
+      "rating-4": "A little bit",
+      "rating-5": "Quite a lot"
+    },
+    "about-text": "This survey helps us learn how people feel about streets."
+  },
   "i18n": {
     "lang": {
       "ar": "Arabic",
