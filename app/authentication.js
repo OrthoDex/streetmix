@@ -16,8 +16,6 @@ const authenticateJWT = (req, res, next) => {
       next()
     })
   } else {
-    // for now, endpoints handle the non-auth'd user case themselves
-    // res.sendStatus(401);
     next()
   }
 }
