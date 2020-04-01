@@ -37,7 +37,6 @@ const AccessTokenHandler = function (req, res) {
           )
           res.cookie('login_token', user.loginToken)
           res.cookie('access_token', accessToken)
-          console.log('mission accomplished!!!')
           res.redirect('/just-signed-in')
         })
         .catch((error) => {

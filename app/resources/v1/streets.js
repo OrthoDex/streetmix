@@ -439,10 +439,7 @@ exports.find = async function (req, res) {
 
 exports.put = async function (req, res) {
   let body
-  // console.log({
-  //   params: req.params,
-  //   body: JSON.stringify(req.body, null, 2)
-  // })
+
   if (req.body) {
     try {
       body = req.body
