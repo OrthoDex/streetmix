@@ -439,7 +439,10 @@ exports.find = async function (req, res) {
 
 exports.put = async function (req, res) {
   let body
-
+  // console.log({
+  //   params: req.params,
+  //   body: JSON.stringify(req.body, null, 2)
+  // })
   if (req.body) {
     try {
       body = req.body
@@ -524,17 +527,7 @@ exports.put = async function (req, res) {
     handleErrors(ERRORS.CANNOT_UPDATE_STREET)
   }
 
-  async function updateStreetWithCreatorId (street) {
-    let user
-    try {
-      user = await User.findOne({
-        where: { loginTokens: { [Op.contains]: [req.loginToken] } }
-      })
-    } catch (err) {
-      logger.error(err)
-      handleErrors(ERRORS.CANNOT_UPDATE_STREET)
-    }
-
+  async function updateStreetWithUser (street, user) {
     if (!user) {
       throw new Error(ERRORS.UNAUTHORISED_ACCESS)
     }
@@ -547,7 +540,7 @@ exports.put = async function (req, res) {
       throw new Error(ERRORS.FORBIDDEN_REQUEST)
     }
     return updateStreetData(street)
-  } // END function - updateStreetWithCreatorId
+  } // END function - updateStreetWithUser
 
   if (!street) {
     handleErrors(ERRORS.STREET_NOT_FOUND)
@@ -566,11 +559,22 @@ exports.put = async function (req, res) {
       })
       .catch(handleErrors)
   } else {
-    if (!req.loginToken) {
+    if (!req.user) {
       res.status(401).end()
       return
     }
-    updateStreetWithCreatorId(street)
+
+    const user = await User.findOne({
+      where: { auth0_id: req.user.sub }
+    })
+
+    const isOwner = user.id === street.creatorId
+    if (!user || !isOwner) {
+      res.status(401).end()
+      return
+    }
+
+    updateStreetWithUser(street, user)
       .then((street) => {
         res.status(204).end()
       })

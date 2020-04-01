@@ -2,6 +2,7 @@ const routes = require('express').Router()
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const resources = require('./resources')
+const authenticateJWT = require('./authentication')
 /**
  * @swagger
  *
@@ -667,7 +668,11 @@ routes.head('/api/v1/streets', resources.v1.streets.find)
 routes.delete('/api/v1/streets/:street_id', resources.v1.streets.delete)
 routes.head('/api/v1/streets/:street_id', resources.v1.streets.get)
 routes.get('/api/v1/streets/:street_id', resources.v1.streets.get)
-routes.put('/api/v1/streets/:street_id', resources.v1.streets.put)
+routes.put(
+  '/api/v1/streets/:street_id',
+  authenticateJWT,
+  resources.v1.streets.put
+)
 
 /**
  * @swagger

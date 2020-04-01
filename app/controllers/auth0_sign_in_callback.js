@@ -14,7 +14,9 @@ const AccessTokenHandler = function (req, res) {
     const auth0 = Authentication()
 
     try {
-      const user = await auth0.getProfile(body.access_token)
+      const accessToken = body.access_token
+      const user = await auth0.getProfile(accessToken)
+
       const apiRequestBody = getUserInfo(user)
       //  Must be an absolute URI
       const endpoint =
@@ -26,14 +28,16 @@ const AccessTokenHandler = function (req, res) {
       axios
         .post(endpoint, apiRequestBody)
         .then((response) => {
-          const body = response.data
+          const user = response.data
 
           // TODO resolve user via auth0
           res.cookie(
             'user_id',
-            body.id || apiRequestBody.auth0_twitter.screenName
+            user.id || apiRequestBody.auth0_twitter.screenName
           )
-          res.cookie('login_token', body.loginToken)
+          res.cookie('login_token', user.loginToken)
+          res.cookie('access_token', accessToken)
+          console.log('mission accomplished!!!')
           res.redirect('/just-signed-in')
         })
         .catch((error) => {
